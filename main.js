@@ -7,6 +7,8 @@ const play = document.querySelector("#play");
 const input = document.querySelector("#guess-input");
 const gameContainer = document.querySelector("#game");
 const guessContainer = document.querySelector("#guess-container");
+const lower = document.querySelector("#lower");
+const higher = document.querySelector("#higher");
 
 play.addEventListener("click", () => {
   gameContainer.classList.remove("hidden");
@@ -15,78 +17,78 @@ play.addEventListener("click", () => {
   game.startGame();
 });
 
-hide.addEventListener("click", () => {
-  gameContainer.classList.add("hidden");
-  guessContainer.classList.add("hidden");
-  tentatives.classList.add("hidden");
-});
-
 class Game {
   constructor() {
     this.score = 0;
     this.tentatives = 0;
     this.guessNumber = this.randomizeNumber();
+    this.guesses = [];
+    this.addGuessEventListener();
+    this.addNewGameEventListener();
+    console.log(this.guessNumber);
   }
 
   randomizeNumber() {
-    this.guessNumber = Math.floor(Math.random() * 500) + 1;
-    console.log(this.guessNumber)
+    return Math.floor(Math.random() * 500) + 1;
   }
 
-  checkGuess() {
-    const guess = input.value;
-    this.tentatives++;
-    tentatives.innerHTML = `Tentatives : ${this.tentatives}`;
-    if (guess == this.randomizeNumber) {
-      alert("Bravo");
-      this.score++;
-      document.querySelector("#score").innerHTML = `Score : ${this.score}`;
-      this.randomizeNumber();
-      this.tentatives = 0;
-      tentatives.innerHTML = `Tentatives : ${this.tentatives}`;
-    } else if (guess < this.guessNumber) {
-      alert("Plus grand");
-    } else {
-      alert("Plus petit");
-    }
-
-
-  }
-
-  newgame() {}
-
-  startGame() {
-
+  addGuessEventListener() {
     input.addEventListener("keyup", (e) => {
       if (e.key === "Enter") {
-        this.checkGuess();
+        const guess = parseInt(input.value);
+        this.tentatives++;
+        start.textContent = `Nombre de tentatives : ${this.tentatives}`;
+        this.checkGuess(guess);
+        input.value = '';
       }
-    })
+    });
+  }
 
+  addNewGameEventListener() {
+    hide.addEventListener("click", () => {
+      this.restart();
+    });
+  }
 
+  startGame() {
+    this.tentatives = 0;
+    console.log(this.guessNumber);
+  }
 
+  checkGuess(guess) {
+    if (guess === this.guessNumber) {
+      tentatives.textContent = "You win";
+      console.log(this.score);
+    } else {
+      this.guesses.push(parseInt(guess));
+      this.guesses.forEach((e) => {
+        const newElement = document.createElement('span');
+        newElement.textContent = e;
+        input.appendChild(newElement);
+      });
 
-
-    // alert("start");
-    // this.tentatives = 0;
-    // this.randomizeNumber();
-    // this.score = 0;
-    // const guess = input.value;
-    // game.tentatives++;
-    // tentatives.innerHTML = `Tentatives : ${game.tentatives}`;
-    // if (guess == game.guessNumber) {
-    //   alert("Bravo");
-    //   game.score++;
-    //   document.querySelector("#score").innerHTML = `Score : ${game.score}`;
-    //   game.randomizeNumber();
-    //   game.tentatives = 0;
-    //   tentatives.innerHTML = `Tentatives : ${game.tentatives}`;
-    // } else if (guess < game.guessNumber) {
-    //   alert("Plus grand");
-    // } else {
-    //   alert("Plus petit");
-    // }
-    // input.value = "";
+      if (guess === this.guessNumber) {
+        tentatives.textContent = "You win";
+        console.log(this.score);
+      } else if (guess > this.guessNumber) {
+        higher.textContent = "Trop grand";
+        lower.textContent = "";
+      } else {
+        lower.textContent = "Trop petit";
+        higher.textContent = "";
+      }
+    }
+  }
+  restart() {
+    this.tentatives = 0;
+    this.guesses = [];
+    input.value = '';
+    start.textContent = "Let's Play";
+    tentatives.textContent = '';
+    lower.textContent = '';
+    higher.textContent = '';
+    this.guessNumber = this.randomizeNumber();
+    this.startGame()
   }
 }
 
