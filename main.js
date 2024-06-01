@@ -12,6 +12,7 @@ play.addEventListener("click", () => {
   gameContainer.classList.remove("hidden");
   guessContainer.classList.remove("hidden");
   tentatives.classList.remove("hidden");
+  game.startGame();
 });
 
 hide.addEventListener("click", () => {
@@ -29,11 +30,43 @@ class Game {
 
   randomizeNumber() {
     this.guessNumber = Math.floor(Math.random() * 500) + 1;
+    console.log(this.guessNumber)
+  }
+
+  checkGuess() {
+    const guess = input.value;
+    this.tentatives++;
+    tentatives.innerHTML = `Tentatives : ${this.tentatives}`;
+    if (guess == this.randomizeNumber) {
+      alert("Bravo");
+      this.score++;
+      document.querySelector("#score").innerHTML = `Score : ${this.score}`;
+      this.randomizeNumber();
+      this.tentatives = 0;
+      tentatives.innerHTML = `Tentatives : ${this.tentatives}`;
+    } else if (guess < this.guessNumber) {
+      alert("Plus grand");
+    } else {
+      alert("Plus petit");
+    }
+
+
   }
 
   newgame() {}
 
   startGame() {
+
+    input.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") {
+        this.checkGuess();
+      }
+    })
+
+
+
+
+
     // alert("start");
     // this.tentatives = 0;
     // this.randomizeNumber();
