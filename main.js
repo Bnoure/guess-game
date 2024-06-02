@@ -46,7 +46,8 @@ class Game {
 
   addNewGameEventListener() {
     hide.addEventListener("click", () => {
-      this.restart();
+    game.startGame();
+    ;
     });
   }
 
@@ -62,9 +63,9 @@ class Game {
     } else {
       this.guesses.push(parseInt(guess));
       this.guesses.forEach((e) => {
-        const newElement = document.createElement('span');
-        newElement.textContent = e;
-        input.appendChild(newElement);
+        const guessElement = document.createElement("div");
+        guessElement.textContent = e;
+        guessContainer.appendChild(guessElement);
       });
 
       if (guess === this.guessNumber) {
@@ -79,17 +80,7 @@ class Game {
       }
     }
   }
-  restart() {
-    this.tentatives = 0;
-    this.guesses = [];
-    input.value = '';
-    start.textContent = "Let's Play";
-    tentatives.textContent = '';
-    lower.textContent = '';
-    higher.textContent = '';
-    this.guessNumber = this.randomizeNumber();
-    this.startGame()
-  }
+
 }
 
 const game = new Game();
